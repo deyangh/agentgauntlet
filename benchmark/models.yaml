@@ -1,0 +1,38 @@
+# Models for the published leaderboard.
+#
+# Cost control: the suite is 16 scenarios; at repeats=3 that is 48 runs per model,
+# each a handful of short turns. Keep most entries on small or local models and
+# include only one or two frontier models for a headline number.
+#
+# Every model string is passed straight to LiteLLM, so credentials come from the
+# usual provider environment variables (ANTHROPIC_API_KEY, OPENAI_API_KEY, ...).
+# Local Ollama models need no key and cost nothing.
+#
+# Tool-calling support is a prerequisite, not a nicety: a model that cannot emit
+# tool calls will score a meaningless 0% attack success rate with 0% utility.
+# The utility column on the leaderboard is what exposes that.
+
+repeats: 3
+concurrency: 4
+temperature: 0.0
+
+models:
+  - id: ollama/llama3.1
+    label: Llama 3.1 8B (local)
+    notes: free, runs on the benchmarking machine
+
+  - id: ollama/qwen2.5
+    label: Qwen 2.5 (local)
+    notes: free, runs on the benchmarking machine
+
+  - id: ollama/mistral
+    label: Mistral 7B (local)
+    notes: free; weaker tool calling — watch the utility column
+
+  # Uncomment the hosted models you want in the run. These cost real money.
+  # - id: openai/gpt-4o-mini
+  #   label: GPT-4o mini
+  # - id: anthropic/claude-haiku-4-5-20251001
+  #   label: Claude Haiku 4.5
+  # - id: anthropic/claude-sonnet-5
+  #   label: Claude Sonnet 5
