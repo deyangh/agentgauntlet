@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install
+        run: pip install -e ".[dev]"
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Types
+        run: mypy
+
+      - name: Tests
+        run: pytest -q
+
+      # The whole suite runs against the offline mock agents, so CI never needs
+      # an API key and never makes a network call.
+      - name: Suite self-check (offline)
+        run: |
+          agentgauntlet run --adapter mock --model vulnerable --repeats 1 \
+            --quiet --fail-over-asr 1.0 --junit junit.xml
+          agentgauntlet run --adapter mock --model safe --repeats 1 \
+            --quiet --fail-over-asr 0.5
