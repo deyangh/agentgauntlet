@@ -1,0 +1,88 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agentgauntlet"
+version = "0.1.0"
+description = "pytest for agent security — run your LLM agent through a gauntlet of prompt-injection, exfiltration, and tool-misuse scenarios."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Deyang Hsu" }]
+keywords = [
+    "llm",
+    "agents",
+    "prompt-injection",
+    "security",
+    "evaluation",
+    "red-teaming",
+    "mcp",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: Software Development :: Testing",
+]
+dependencies = [
+    "pydantic>=2.6",
+    "typer>=0.12",
+    "PyYAML>=6.0",
+    "Jinja2>=3.1",
+]
+
+[project.optional-dependencies]
+# The LiteLLM adapter is the path to real models. Kept optional so the core
+# package (and CI, which runs entirely on the scripted mock adapter) stays light.
+llm = ["litellm>=1.40"]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.5",
+    "mypy>=1.10",
+    "types-PyYAML",
+]
+
+[project.urls]
+Homepage = "https://github.com/deyangh/agentgauntlet"
+Repository = "https://github.com/deyangh/agentgauntlet"
+
+[project.scripts]
+agentgauntlet = "agentgauntlet.cli:app"
+
+[project.entry-points.pytest11]
+agentgauntlet = "agentgauntlet.pytest_plugin"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agentgauntlet"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+ignore = ["B008"]  # typer uses function calls in argument defaults
+
+[tool.ruff.lint.per-file-ignores]
+# Typographic × and − belong in the rendered leaderboard copy.
+"benchmark/build_leaderboard.py" = ["RUF001"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
+files = ["src/agentgauntlet"]
+
+[[tool.mypy.overrides]]
+# litellm ships incomplete stubs; we isolate the untyped boundary to one module.
+module = ["litellm", "litellm.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
