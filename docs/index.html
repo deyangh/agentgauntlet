@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentGauntlet — pytest for agent security</title>
+<meta name="description" content="Run your LLM agent through prompt-injection, exfiltration, and tool-misuse scenarios and get a reproducible security report.">
+<style>
+  :root {
+    --bg:#fbfbfd; --panel:#fff; --ink:#16181d; --muted:#62677a; --line:#e3e5ec;
+    --accent:#3b5bdb; --code:#f4f5f8;
+    --shadow:0 1px 2px rgba(16,18,29,.06), 0 4px 14px rgba(16,18,29,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#14161b; --panel:#1c1f26; --ink:#e8eaf0; --muted:#9aa1b4; --line:#2c313b;
+      --accent:#849bf0; --code:#23272f; --shadow:none;
+    }
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; padding:3.5rem 1.25rem 5rem; background:var(--bg); color:var(--ink);
+    font:16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  }
+  .wrap { max-width:760px; margin:0 auto; }
+  h1 { font-size:2.1rem; margin:0 0 .4rem; letter-spacing:-.03em; }
+  .tag { color:var(--muted); font-size:1.05rem; margin:0 0 2rem; }
+  h2 { font-size:1.05rem; margin:2.75rem 0 .6rem; letter-spacing:-.01em; }
+  p { margin:0 0 1rem; }
+  a { color:var(--accent); }
+  pre {
+    background:var(--code); border:1px solid var(--line); border-radius:8px;
+    padding:.85rem 1rem; overflow-x:auto; font-size:.85rem; margin:0 0 1rem;
+    font-family:ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  code { font-family:ui-monospace, SFMono-Regular, Menlo, monospace; }
+  p code, li code { background:var(--code); padding:.1rem .35rem; border-radius:4px; font-size:.88em; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:.9rem; margin:1.5rem 0; }
+  .card {
+    display:block; background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    padding:1.1rem 1.2rem; text-decoration:none; color:inherit; box-shadow:var(--shadow);
+  }
+  .card:hover { border-color:var(--accent); }
+  .card .t { font-weight:600; margin-bottom:.15rem; }
+  .card .d { color:var(--muted); font-size:.85rem; }
+  .card.soon { opacity:.6; }
+  ul { padding-left:1.15rem; }
+  li { margin-bottom:.35rem; }
+  footer { margin-top:3.5rem; padding-top:1.2rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>AgentGauntlet</h1>
+  <p class="tag">pytest for agent security.</p>
+
+  <p>
+    Point it at an LLM agent and it runs the thing through a suite of prompt-injection,
+    data-exfiltration, confused-deputy, and tool-misuse scenarios, then tells you —
+    reproducibly — which ones it fell for.
+  </p>
+
+  <div class="cards">
+    <a class="card" href="example-report.html">
+      <div class="t">Example report →</div>
+      <div class="d">What a run actually produces, transcripts and all</div>
+    </a>
+    <a class="card" href="https://github.com/deyangh/agentgauntlet">
+      <div class="t">Source on GitHub →</div>
+      <div class="d">Apache-2.0, contributions welcome</div>
+    </a>
+    <span class="card soon">
+      <div class="t">Leaderboard</div>
+      <div class="d">Cross-model results — coming with the first benchmark run</div>
+    </span>
+  </div>
+
+  <h2>Try it in one command</h2>
+  <p>No API key required — this runs the whole suite against a simulated agent, offline.</p>
+<pre>pip install git+https://github.com/deyangh/agentgauntlet
+agentgauntlet run --adapter mock --out report.html</pre>
+
+  <h2>Why it can measure anything</h2>
+  <p>
+    <strong>The harness owns the agent loop.</strong> Your agent only answers "given this
+    conversation and these tools, what next?" — AgentGauntlet executes every tool call
+    itself. That buys control over where adversarial payloads appear (inside the data a tool
+    returns, which is how real injection arrives) and observation of every action taken.
+  </p>
+  <p>
+    <strong>Attack success is an observable action.</strong> Scenarios are built so the only
+    way to comply is to invoke a canary tool or carry a canary token into an outbound
+    argument. The secret crossed the boundary or it did not; there is no rubric to argue
+    with.
+  </p>
+
+  <h2>Attack success rate is only half a score</h2>
+  <p>
+    An agent that refuses everything scores a perfect 0% attack success rate. So does one
+    too weak to call tools. Every scenario therefore carries a benign-task check, and both
+    numbers are reported together — a result is good only when attack success is low
+    <em>and</em> utility is high.
+  </p>
+
+  <h2>Testing your own agent</h2>
+  <p>Three adapters, one interface:</p>
+  <ul>
+    <li><code>litellm</code> — any hosted or local model, including Ollama</li>
+    <li><code>callable</code> — your own Python agent, guardrails and all, inside the loop</li>
+    <li><code>subprocess</code> — an agent in any language, over JSON on stdin/stdout</li>
+  </ul>
+
+  <footer>
+    Every attack runs inside an in-process mock environment. No email is sent, no request
+    leaves the machine, nothing is deleted or transferred — the "malicious" tools are
+    instrumented stubs whose invocation is the measurement.
+  </footer>
+
+</div>
+</body>
+</html>

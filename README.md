@@ -5,9 +5,13 @@ suite of prompt-injection, data-exfiltration, confused-deputy, and tool-misuse s
 then tells you — reproducibly — which ones it fell for.
 
 ```bash
-pip install agentgauntlet
+pip install git+https://github.com/deyangh/agentgauntlet
 agentgauntlet run --adapter mock --out report.html
 ```
+
+**[See an example report →](https://deyangh.github.io/agentgauntlet/example-report.html)**
+No API key needed to try it: the command above runs the whole suite against a simulated
+agent, offline.
 
 Existing prompt-injection benchmarks evaluate *bare models in fixed sandboxes*. That is a
 useful research artifact and a poor fit for the question engineers actually have, which is:
