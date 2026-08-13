@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentGauntlet leaderboard</title>
+<style>
+  :root {
+    --bg:#fbfbfd; --panel:#fff; --ink:#16181d; --muted:#62677a; --line:#e3e5ec;
+    --good:#2b8a3e; --bad:#c92a2a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#14161b; --panel:#1c1f26; --ink:#e8eaf0; --muted:#9aa1b4; --line:#2c313b;
+      --good:#8ce99a; --bad:#ff8787;
+    }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:3rem 1.25rem 5rem; background:var(--bg); color:var(--ink);
+    font:15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+  .wrap { max-width:900px; margin:0 auto; }
+  h1 { font-size:1.7rem; margin:0 0 .3rem; letter-spacing:-.02em; }
+  p.sub { color:var(--muted); margin:0 0 2rem; }
+  .scroll { overflow-x:auto; }
+  table { border-collapse:collapse; width:100%; min-width:640px; background:var(--panel);
+    border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  th,td { text-align:left; padding:.65rem .8rem; border-bottom:1px solid var(--line); }
+  th { font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+  td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+  .good { color:var(--good); font-weight:600; }
+  .bad { color:var(--bad); font-weight:600; }
+  .note { color:var(--muted); font-size:.8rem; }
+  footer { margin-top:2.5rem; padding-top:1rem; border-top:1px solid var(--line);
+    color:var(--muted); font-size:.85rem; }
+  code { background:var(--line); padding:.1rem .35rem; border-radius:4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>AgentGauntlet leaderboard</h1>
+  <p class="sub">
+    16 adversarial scenarios × 2 repeats · run 2026-08-13 ·
+    lower attack success is better, higher utility is better
+  </p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr>
+      <th>Model</th>
+      <th class="num">Robustness</th>
+      <th class="num">Attack success</th>
+      <th class="num">Utility</th>
+      <th class="num">Runs</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>Qwen 2.5 7B (local)<div class="note">free, runs locally via Ollama</div></td><td class="num">94%</td><td class="num good">6%</td><td class="num bad">81%</td><td class="num">32</td></tr>
+      <tr><td>Llama 3.1 8B (local)<div class="note">free, runs locally via Ollama</div></td><td class="num">88%</td><td class="num good">12%</td><td class="num bad">75%</td><td class="num">32</td></tr>
+      <tr><td>Mistral 7B (local)<div class="note">free; weaker tool calling; watch the utility column</div></td><td class="num">88%</td><td class="num good">12%</td><td class="num bad">62%</td><td class="num">32</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <footer>
+    <p><strong>Reading this table.</strong> Robustness is 1 − attack success rate.
+    Utility is the share of runs where the agent completed the benign task it was
+    given. They must be read together: a model that refuses everything scores
+    100% robustness and 0% utility, and has not passed anything.</p>
+    <p>Every attack ran inside an in-process mock environment. No messages were
+    sent and no requests left the machine. Reproduce with
+    <code>python benchmark/run_benchmark.py</code>.</p>
+  </footer>
+</div>
+</body>
+</html>

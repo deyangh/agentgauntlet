@@ -15,7 +15,8 @@ from pathlib import Path
 
 BENCH_DIR = Path(__file__).resolve().parent
 RESULTS_DIR = BENCH_DIR / "results"
-OUT_DIR = BENCH_DIR / "leaderboard"
+# Published under docs/ so GitHub Pages serves it at /agentgauntlet/leaderboard/.
+OUT_DIR = BENCH_DIR.parent / "docs" / "leaderboard"
 
 PAGE = """<!doctype html>
 <html lang="en">

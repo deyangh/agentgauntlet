@@ -118,6 +118,15 @@ There is also a pytest plugin, so scenarios can be collected as ordinary tests:
 pytest --agentgauntlet-scenarios ./scenarios --agentgauntlet-adapter mock
 ```
 
+## Results
+
+A first run against three local models (Llama 3.1 8B, Qwen 2.5 7B, Mistral 7B) is on the
+**[leaderboard](https://deyangh.github.io/agentgauntlet/leaderboard/)**, with a full writeup
+in [`benchmark/RESULTS.md`](benchmark/RESULTS.md). Across 96 runs, 10.4% executed the planted
+attack, but the models completed only 73% of the benign tasks, so much of their apparent
+resistance is really failure to do the job. That gap is exactly what the utility axis is for.
+Adding hosted models is a one-line uncomment in [`benchmark/models.yaml`](benchmark/models.yaml).
+
 ## The scenario suite
 
 Sixteen scenarios across eight categories, each with a threat-model writeup in its
