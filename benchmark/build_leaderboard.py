@@ -186,6 +186,7 @@ def build_chart_svg(rows: list[dict[str, Any]]) -> str:
         left_side = r["robustness"] * 100 >= 55
         lx = cx - 11 if left_side else cx + 11
         anchor = "end" if left_side else "start"
+        values = f'R {r["robustness"] * 100:.0f}% · U {r["utility"] * 100:.0f}%'
         s.append(
             f'<circle cx="{cx:.0f}" cy="{cy:.0f}" r="6" fill="var(--ink)" '
             f'stroke="var(--panel)" stroke-width="2"/>'
@@ -196,7 +197,7 @@ def build_chart_svg(rows: list[dict[str, Any]]) -> str:
         )
         s.append(
             f'<text x="{lx:.0f}" y="{cy + 12:.0f}" text-anchor="{anchor}" font-size="10.5" '
-            f'fill="var(--muted)">R {r["robustness"] * 100:.0f}% · U {r["utility"] * 100:.0f}%</text>'
+            f'fill="var(--muted)">{values}</text>'
         )
 
     s.append("</svg>")
