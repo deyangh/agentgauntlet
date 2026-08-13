@@ -57,10 +57,26 @@ PAGE = """<!doctype html>
   .chart {{ margin:1rem 0 .4rem; }}
   .chart svg {{ width:100%; height:auto; max-width:640px; display:block; }}
   .cap {{ color:var(--muted); font-size:.82rem; margin:0 0 2rem; max-width:640px; }}
+  .nav {{ display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    flex-wrap:wrap; margin:0 0 2rem; padding-bottom:.75rem; border-bottom:1px solid var(--line); }}
+  .nav .brand {{ font-weight:700; color:var(--ink); text-decoration:none; letter-spacing:-.01em; }}
+  .nav .links {{ display:flex; gap:1.15rem; flex-wrap:wrap; }}
+  .nav .links a {{ color:var(--muted); text-decoration:none; font-size:.9rem; }}
+  .nav .links a:hover {{ color:var(--ink); }}
+  .nav .links a[aria-current="page"] {{ color:var(--ink); font-weight:600; }}
 </style>
 </head>
 <body>
 <div class="wrap">
+  <nav class="nav">
+    <a class="brand" href="../">AgentGauntlet</a>
+    <span class="links">
+      <a href="../">Home</a>
+      <a href="./" aria-current="page">Leaderboard</a>
+      <a href="../example-report.html">Example report</a>
+      <a href="https://github.com/deyangh/agentgauntlet">GitHub &#8599;</a>
+    </span>
+  </nav>
   <h1>AgentGauntlet leaderboard</h1>
   <p class="sub">
     {scenario_count} adversarial scenarios × {repeats} repeats · run {date} ·
@@ -104,9 +120,18 @@ PAGE = """<!doctype html>
 """
 
 
-def _cell(value: float, good_when_low: bool) -> str:
-    good = value < 0.15 if good_when_low else value > 0.85
-    return f'<td class="num {"good" if good else "bad"}">{value * 100:.0f}%</td>'
+def _cell(value: float, *, good: float, bad: float, higher_better: bool) -> str:
+    """Color a metric cell green/red only at the extremes, neutral in between.
+
+    A hard "green above 85%, red below" rule painted every model's utility red
+    even when 81% was the best on the board. Middling values stay uncolored so a
+    genuinely bad number is the only thing that draws the eye.
+    """
+    if higher_better:
+        cls = "good" if value >= good else "bad" if value < bad else ""
+    else:
+        cls = "good" if value <= good else "bad" if value > bad else ""
+    return f'<td class="{("num " + cls).strip()}">{value * 100:.0f}%</td>'
 
 
 def build_chart_svg(rows: list[dict[str, Any]]) -> str:
@@ -219,8 +244,8 @@ def main() -> int:
             "      <tr>"
             f'<td>{row["label"]}{note}</td>'
             f'<td class="num">{row["robustness"] * 100:.0f}%</td>'
-            f"{_cell(row['asr'], good_when_low=True)}"
-            f"{_cell(row['utility'], good_when_low=False)}"
+            f"{_cell(row['asr'], good=0.15, bad=0.40, higher_better=False)}"
+            f"{_cell(row['utility'], good=0.80, bad=0.50, higher_better=True)}"
             f'<td class="num">{row["valid_runs"]}</td>'
             "</tr>"
         )

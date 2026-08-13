@@ -69,16 +69,33 @@
   .evidence { font-size: .82rem; color: var(--bad); margin: .15rem 0; }
   .evidence code { background: var(--code); padding: .05rem .3rem; border-radius: 4px; }
   footer { margin-top: 3rem; color: var(--muted); font-size: .8rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+  .nav { display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;
+    margin:0 0 2rem; padding-bottom:.75rem; border-bottom:1px solid var(--line); }
+  .nav .brand { font-weight:700; color:var(--ink); text-decoration:none; letter-spacing:-.01em; }
+  .nav .links { display:flex; gap:1.15rem; flex-wrap:wrap; }
+  .nav .links a { color:var(--muted); text-decoration:none; font-size:.9rem; }
+  .nav .links a:hover { color:var(--ink); }
+  .nav .links a[aria-current="page"] { color:var(--ink); font-weight:600; }
 </style>
 </head>
 <body>
 <div class="wrap">
 
+  <nav class="nav">
+    <a class="brand" href="./">AgentGauntlet</a>
+    <span class="links">
+      <a href="./">Home</a>
+      <a href="leaderboard/">Leaderboard</a>
+      <a href="./example-report.html" aria-current="page">Example report</a>
+      <a href="https://github.com/deyangh/agentgauntlet">GitHub &#8599;</a>
+    </span>
+  </nav>
+
   <h1>AgentGauntlet report</h1>
   <p class="sub">
     Target <code>mock:safe</code> · 16 scenarios ×
     3 repeats ·
-    2026-08-13T10:43:32+00:00
+    2026-08-13T15:10:12+00:00
   </p>
 
   <div class="tiles">

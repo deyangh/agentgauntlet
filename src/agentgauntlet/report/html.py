@@ -41,7 +41,9 @@ def _representative(runs: list[ScenarioRun]) -> dict[str, ScenarioRun]:
     return chosen
 
 
-def render_html(result: SuiteResult) -> str:
+def render_html(result: SuiteResult, site_nav: bool = False) -> str:
+    """Render the report. ``site_nav`` adds the docs-site navigation bar and is only
+    used for the published example report; a user's own report has no site chrome."""
     env = Environment(
         loader=FileSystemLoader(_TEMPLATE_DIR),
         autoescape=select_autoescape(["html", "j2"]),
@@ -53,11 +55,12 @@ def render_html(result: SuiteResult) -> str:
         result=result,
         representative=_representative(result.runs),
         highlight=_highlight,
+        site_nav=site_nav,
     )
 
 
-def write_html(result: SuiteResult, path: str | Path) -> Path:
+def write_html(result: SuiteResult, path: str | Path, site_nav: bool = False) -> Path:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(render_html(result), encoding="utf-8")
+    path.write_text(render_html(result, site_nav=site_nav), encoding="utf-8")
     return path

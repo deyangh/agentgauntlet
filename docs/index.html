@@ -47,10 +47,27 @@
   ul { padding-left:1.15rem; }
   li { margin-bottom:.35rem; }
   footer { margin-top:3.5rem; padding-top:1.2rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem; }
+  .nav { display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;
+    margin:0 0 2.5rem; padding-bottom:.75rem; border-bottom:1px solid var(--line); }
+  .nav .brand { font-weight:700; color:var(--ink); text-decoration:none; letter-spacing:-.01em; }
+  .nav .links { display:flex; gap:1.15rem; flex-wrap:wrap; }
+  .nav .links a { color:var(--muted); text-decoration:none; font-size:.9rem; }
+  .nav .links a:hover { color:var(--ink); }
+  .nav .links a[aria-current="page"] { color:var(--ink); font-weight:600; }
 </style>
 </head>
 <body>
 <div class="wrap">
+
+  <nav class="nav">
+    <a class="brand" href="./">AgentGauntlet</a>
+    <span class="links">
+      <a href="./" aria-current="page">Home</a>
+      <a href="leaderboard/">Leaderboard</a>
+      <a href="example-report.html">Example report</a>
+      <a href="https://github.com/deyangh/agentgauntlet">GitHub &#8599;</a>
+    </span>
+  </nav>
 
   <h1>AgentGauntlet</h1>
   <p class="tag">pytest for agent security.</p>
