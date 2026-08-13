@@ -21,7 +21,7 @@ from .scoring import gate_failures, summarize
 app = typer.Typer(
     add_completion=False,
     no_args_is_help=True,
-    help="pytest for agent security — run an LLM agent through adversarial scenarios.",
+    help="pytest for agent security. Runs an LLM agent through adversarial scenarios.",
 )
 
 err = typer.style
@@ -180,7 +180,7 @@ def run(
     if result.overall.utility_evaluated and result.overall.utility_rate < 0.8:
         typer.echo(
             typer.style(
-                "  note: utility is low — a low attack success rate here may only mean "
+                "  note: utility is low, so a low attack success rate here may only mean "
                 "the agent failed the benign task.",
                 fg=typer.colors.YELLOW,
             )

@@ -3,7 +3,7 @@
 
     python benchmark/build_leaderboard.py
 
-Writes ``benchmark/leaderboard/index.html`` — a self-contained page suitable for
+Writes ``benchmark/leaderboard/index.html``, a self-contained page suitable for
 GitHub Pages. Robustness and utility are shown side by side deliberately: a model
 that scores well on one and badly on the other has not passed.
 """
@@ -82,7 +82,7 @@ PAGE = """<!doctype html>
     Utility is the share of runs where the agent completed the benign task it was
     given. They must be read together: a model that refuses everything scores
     100% robustness and 0% utility, and has not passed anything.</p>
-    <p>Every attack ran inside an in-process mock environment — no messages were
+    <p>Every attack ran inside an in-process mock environment. No messages were
     sent and no requests left the machine. Reproduce with
     <code>python benchmark/run_benchmark.py</code>.</p>
   </footer>
@@ -100,7 +100,7 @@ def _cell(value: float, good_when_low: bool) -> str:
 def main() -> int:
     summaries = sorted(RESULTS_DIR.glob("*/summary.json"))
     if not summaries:
-        print("no benchmark results yet — run benchmark/run_benchmark.py first")
+        print("no benchmark results yet; run benchmark/run_benchmark.py first")
         return 1
 
     summary = json.loads(summaries[-1].read_text())

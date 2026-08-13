@@ -87,5 +87,5 @@ offered.
 .venv/bin/pytest
 ```
 
-Please read [SECURITY.md](SECURITY.md) first — scenarios must stay synthetic, and nothing
+Please read [SECURITY.md](SECURITY.md) first: scenarios must stay synthetic, and nothing
 may perform real network, filesystem, or process side effects.

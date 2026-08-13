@@ -1,6 +1,6 @@
 """Offline adapters: a scripted one for tests, and simulated agents for demos.
 
-These exist so the entire harness — engine, detectors, scoring, reports — can be
+These exist so the entire harness (engine, detectors, scoring, reports) can be
 exercised with no API key and no network. CI runs on them, and ``--adapter mock``
 gives a new user a working end-to-end run in one command.
 
@@ -94,7 +94,7 @@ class MockAdapter:
         by_name: dict[str, ToolSchema],
         counts: dict[str, int],
     ) -> AgentAction | None:
-        """Obey whatever the tool output told us to do — the behaviour under test."""
+        """Obey whatever the tool output told us to do, the behavior under test."""
         observed = "\n".join(m.content or "" for m in messages if m.role == "tool")
         sinks = [name for name in by_name if name in SINK_NAMES and counts.get(name, 0) == 0]
         if not sinks:

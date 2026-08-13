@@ -60,4 +60,4 @@ def action_from_payload(payload: dict[str, Any]) -> AgentAction:
         return ToolCalls(calls=calls)
     if kind == "final":
         return FinalResponse(text=str(payload.get("text", "")))
-    raise AdapterError(f"agent returned unrecognised payload type {kind!r}")
+    raise AdapterError(f"agent returned unrecognized payload type {kind!r}")

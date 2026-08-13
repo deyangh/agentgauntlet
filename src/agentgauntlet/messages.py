@@ -1,8 +1,8 @@
 """Conversation and action primitives exchanged between the harness and an adapter.
 
 These types are deliberately provider-agnostic. Adapters translate between them
-and whatever wire format a given backend speaks, which keeps the engine — and
-therefore the scoring — identical across every agent under test.
+and whatever wire format a given backend speaks, which keeps the engine
+(and therefore the scoring) identical across every agent under test.
 """
 
 from __future__ import annotations
@@ -123,7 +123,7 @@ AgentAction: TypeAlias = FinalResponse | ToolCalls
 
 @dataclass
 class RecordedCall:
-    """A tool call as observed by the environment — the primary evidence for detectors."""
+    """A tool call as observed by the environment; the primary evidence for detectors."""
 
     turn: int
     name: str

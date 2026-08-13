@@ -1,7 +1,7 @@
 """Adapter for any model reachable through LiteLLM (Anthropic, OpenAI, Gemini, Ollama…).
 
-This is the path used for the published benchmark. It tests a *model plus system
-prompt*, which is the right unit for cross-model comparison; to test an assembled
+This is the path used for the published benchmark. It tests a model plus system
+prompt, which is the right unit for cross-model comparison; to test an assembled
 agent stack instead, use the callable or subprocess adapters.
 """
 

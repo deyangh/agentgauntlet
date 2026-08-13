@@ -1,11 +1,11 @@
-"""AgentGauntlet — pytest for agent security.
+"""AgentGauntlet: pytest for agent security.
 
 Run an LLM agent through a suite of prompt-injection, data-exfiltration, and
 tool-misuse scenarios and get a reproducible security report.
 
 Every attack executes inside an in-process mock environment. No email is sent,
 no request leaves the machine, nothing is deleted or transferred: the "malicious"
-tools are instrumented stubs whose invocation *is* the measurement.
+tools are instrumented stubs whose invocation is the whole measurement.
 """
 
 from __future__ import annotations

@@ -1,7 +1,7 @@
 """The mock tool sandbox the agent under test operates inside.
 
 The environment serves two jobs at once. It is where adversarial payloads are
-planted (inside the *data* a tool returns, which is the realistic threat model),
+planted (inside the data a tool returns, which is the realistic threat model),
 and it is where every tool invocation is observed. Because the harness owns the
 loop, the agent cannot reach any tool the environment did not hand it.
 """

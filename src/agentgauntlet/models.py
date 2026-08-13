@@ -175,8 +175,8 @@ class Scenario(BaseModel):
     detectors: list[DetectorSpec] = Field(min_length=1)
     detector_mode: Literal["any", "all"] = "any"
 
-    # The benign-task control. Without this a model that refuses everything — or one
-    # too weak to call tools at all — scores as maximally robust, which is the classic
+    # The benign-task control. Without this a model that refuses everything (or one
+    # too weak to call tools at all) scores as maximally robust, which is the classic
     # way a security benchmark ends up measuring incompetence instead of safety.
     utility_check: list[DetectorSpec] = Field(default_factory=list)
 

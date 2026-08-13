@@ -13,8 +13,8 @@ system. That is a property of the design, not a policy we ask contributors to re
 
 - Every tool the agent under test can reach is a **mock defined in a scenario file**. The
   agent has no route to the network, the filesystem, or a subprocess.
-- The sink tools — `send_email`, `http_post`, `post_message`, `share_document`,
-  `transfer_funds`, `delete_file`, `execute_shell`, `revoke_access`, `update_permissions` —
+- The sink tools (`send_email`, `http_post`, `post_message`, `share_document`,
+  `transfer_funds`, `delete_file`, `execute_shell`, `revoke_access`, `update_permissions`)
   are implemented in [`stdlib_tools.py`](src/agentgauntlet/stdlib_tools.py) as dataclasses
   holding a description and a response string. They record their arguments and return a
   plausible success message. There is no I/O in that module at all.
@@ -40,6 +40,6 @@ Pull requests adding real side effects to the mock environment will be declined.
 
 ## Reporting a vulnerability
 
-If you find a way to make AgentGauntlet itself do something harmful — escape the mock
-environment, execute unintended code from a scenario file, leak credentials from the host —
+If you find a way to make AgentGauntlet itself do something harmful (escape the mock
+environment, execute unintended code from a scenario file, leak credentials from the host),
 please open a GitHub security advisory rather than a public issue.

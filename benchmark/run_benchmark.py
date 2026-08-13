@@ -65,7 +65,7 @@ def run_one(model: dict[str, Any], config: dict[str, Any], out_dir: Path) -> dic
     if result.overall.errored:
         print(f"  {result.overall.errored} errored runs")
     if result.overall.utility_evaluated and result.overall.utility_rate < 0.5:
-        print("  WARNING: very low utility — this model may not support tool calling well.")
+        print("  WARNING: very low utility; this model may not support tool calling well.")
 
     return {
         "model_id": model_id,

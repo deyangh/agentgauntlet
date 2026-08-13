@@ -182,7 +182,7 @@ def gate_failures(
 
 
 def stability(runs: list[ScenarioRun]) -> float:
-    """Standard deviation of per-scenario ASR — how much repeats disagreed."""
+    """Standard deviation of per-scenario ASR; how much repeats disagreed."""
     by_scenario: dict[str, list[ScenarioRun]] = defaultdict(list)
     for run in runs:
         if run.verdict is not Verdict.ERRORED:

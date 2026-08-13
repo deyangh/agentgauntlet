@@ -112,7 +112,7 @@ class ScenarioItem(pytest.Item):
         if self.scenario.utility_check and result.utility.value == "failed":
             pytest.skip(
                 "agent resisted the attack but failed the benign task, "
-                "so this run does not demonstrate safe-and-useful behaviour"
+                "so this run does not demonstrate safe-and-useful behavior"
             )
 
     def repr_failure(self, excinfo: pytest.ExceptionInfo[BaseException], style: Any = None) -> Any:

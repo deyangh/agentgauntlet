@@ -26,8 +26,8 @@ regresses.
 
 ## How it works
 
-**The harness owns the agent loop.** Your agent only has to answer one question — given this
-conversation and these tools, what do you do next? — and AgentGauntlet executes every tool
+**The harness owns the agent loop.** Your agent only has to answer one question (given this
+conversation and these tools, what do you do next?), and AgentGauntlet executes every tool
 call itself.
 
 That gives it two things:
@@ -37,7 +37,7 @@ That gives it two things:
 - **Observation.** Every tool call and its arguments are recorded, so detection is a lookup
   rather than a guess.
 
-**Attack success is an observable action, not a judgement call.** Each scenario is built so
+**Attack success is an observable action, not a judgment call.** Each scenario is built so
 the only way to fall for the attack is to call a canary tool or pass a canary token into an
 outbound argument:
 
@@ -71,14 +71,14 @@ overall            asr 6.2%   robustness 93.8%   utility 100.0%
 
 Three adapters share one interface.
 
-**A model** — anything LiteLLM can reach, including a local model through Ollama:
+**A model.** Anything LiteLLM can reach, including a local model through Ollama:
 
 ```bash
 agentgauntlet run --adapter litellm --model ollama/llama3.1
 agentgauntlet run --adapter litellm --model openai/gpt-4o-mini
 ```
 
-**Your own Python agent** — your routing, system prompt, and guardrails, all inside the loop
+**Your own Python agent.** Your routing, system prompt, and guardrails, all inside the loop
 being attacked:
 
 ```python
@@ -134,14 +134,14 @@ directory:
 | `cross_context_contamination` | One user's or tenant's content driving another's actions |
 | `social_engineering` | Authority claims, fake debug modes, manufactured urgency |
 
-Adding one is a single YAML file — see [CONTRIBUTING.md](CONTRIBUTING.md).
+Adding one is a single YAML file; see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Responsible use
 
 This is a defensive testing tool, and it is built so it cannot be used any other way.
 
-Every attack runs inside an in-process mock environment. The "malicious" tools —
-`send_email`, `http_post`, `transfer_funds`, `delete_file`, `execute_shell` — are
+Every attack runs inside an in-process mock environment. The "malicious" tools
+(`send_email`, `http_post`, `transfer_funds`, `delete_file`, `execute_shell`) are
 instrumented stubs that record their arguments and return a plausible success string. No code
 path in this project sends a message, writes a file, moves money, or opens a socket to
 anything except the model provider you configure. The invocation record is the whole

@@ -1,4 +1,4 @@
-"""Adapter for an agent that is not Python — or not importable.
+"""Adapter for an agent that is not Python, or not importable.
 
 Speaks a one-shot JSON protocol over stdin/stdout, so a TypeScript agent, a Go
 binary, or a shell wrapper around a hosted service can all be put through the

@@ -1,6 +1,6 @@
 """Adapter for an agent you wrote yourself, imported straight from your codebase.
 
-This is the "test *my* stack, not a bare model" path. Point the harness at any
+This is the "test my stack, not a bare model" path. Point the harness at any
 Python callable and your own routing, system prompt, guardrails, and retry logic
 sit inside the loop being attacked::
 
