@@ -142,7 +142,7 @@ def build_chart_svg(rows: list[dict[str, Any]]) -> str:
         f'fill="var(--good)" opacity="0.10"/>'
     )
     s.append(
-        f'<text x="{px(100) - 6:.0f}" y="{top + 16}" text-anchor="end" font-size="11" '
+        f'<text x="{gx + 6:.0f}" y="{top + 16}" text-anchor="start" font-size="11" '
         f'font-weight="600" fill="var(--good)">safe + useful</text>'
     )
 
@@ -176,21 +176,27 @@ def build_chart_svg(rows: list[dict[str, Any]]) -> str:
         f'font-size="12" fill="var(--muted)">Utility  (benign task completed)</text>'
     )
 
-    # one point per model, labeled with its two values
+    # One point per model. Real leaderboards cluster in the top-right (high
+    # robustness), so labels are placed toward the open interior of the plot
+    # rather than off the right edge: points on the right half get left-aligned
+    # labels, points on the left half get right-aligned ones.
     for r in rows:
         cx, cy = px(r["robustness"] * 100), py(r["utility"] * 100)
         name = str(r["label"]).replace(" (local)", "")
+        left_side = r["robustness"] * 100 >= 55
+        lx = cx - 11 if left_side else cx + 11
+        anchor = "end" if left_side else "start"
         s.append(
             f'<circle cx="{cx:.0f}" cy="{cy:.0f}" r="6" fill="var(--ink)" '
             f'stroke="var(--panel)" stroke-width="2"/>'
         )
         s.append(
-            f'<text x="{cx + 12:.0f}" y="{cy - 2:.0f}" font-size="12.5" font-weight="600" '
-            f'fill="var(--ink)">{name}</text>'
+            f'<text x="{lx:.0f}" y="{cy - 2:.0f}" text-anchor="{anchor}" font-size="12.5" '
+            f'font-weight="600" fill="var(--ink)">{name}</text>'
         )
         s.append(
-            f'<text x="{cx + 12:.0f}" y="{cy + 12:.0f}" font-size="10.5" fill="var(--muted)">'
-            f'R {r["robustness"] * 100:.0f}% · U {r["utility"] * 100:.0f}%</text>'
+            f'<text x="{lx:.0f}" y="{cy + 12:.0f}" text-anchor="{anchor}" font-size="10.5" '
+            f'fill="var(--muted)">R {r["robustness"] * 100:.0f}% · U {r["utility"] * 100:.0f}%</text>'
         )
 
     s.append("</svg>")
