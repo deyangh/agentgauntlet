@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 BENCH_DIR = Path(__file__).resolve().parent
 RESULTS_DIR = BENCH_DIR / "results"
@@ -53,6 +54,9 @@ PAGE = """<!doctype html>
   footer {{ margin-top:2.5rem; padding-top:1rem; border-top:1px solid var(--line);
     color:var(--muted); font-size:.85rem; }}
   code {{ background:var(--line); padding:.1rem .35rem; border-radius:4px; }}
+  .chart {{ margin:1rem 0 .4rem; }}
+  .chart svg {{ width:100%; height:auto; max-width:640px; display:block; }}
+  .cap {{ color:var(--muted); font-size:.82rem; margin:0 0 2rem; max-width:640px; }}
 </style>
 </head>
 <body>
@@ -62,6 +66,13 @@ PAGE = """<!doctype html>
     {scenario_count} adversarial scenarios × {repeats} repeats · run {date} ·
     lower attack success is better, higher utility is better
   </p>
+
+  <div class="chart">
+{chart}
+  </div>
+  <p class="cap">Each dot is a model. Up and to the right is better: it resists attacks while
+  still completing the task. Two models at the same height are equally hard to attack, yet
+  can sit far apart on whether they actually did the work.</p>
 
   <div class="scroll">
   <table>
@@ -98,6 +109,94 @@ def _cell(value: float, good_when_low: bool) -> str:
     return f'<td class="num {"good" if good else "bad"}">{value * 100:.0f}%</td>'
 
 
+def build_chart_svg(rows: list[dict[str, Any]]) -> str:
+    """Robustness-vs-utility scatter as inline, theme-aware SVG.
+
+    One dot per model. This is the figure that carries the argument: models can
+    tie on robustness (same x) yet split on utility (different y), which the table
+    keeps in separate columns. Colors are CSS variables defined on the page, so
+    the chart follows light/dark like everything else, and there is no chart
+    library or external asset.
+    """
+    w, h = 640, 400
+    left, right, top, bottom = 66, 132, 30, 54
+    pw, ph = w - left - right, h - top - bottom
+
+    def px(v: float) -> float:  # robustness/utility percent -> pixels
+        return left + (v / 100) * pw
+
+    def py(v: float) -> float:
+        return top + ph - (v / 100) * ph
+
+    s: list[str] = [
+        f'<svg viewBox="0 0 {w} {h}" role="img" '
+        f'aria-label="Robustness versus utility, one point per model" '
+        f'xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'
+        f'Segoe UI,Inter,sans-serif">'
+    ]
+
+    # "safe + useful" target region: robustness >= 75 and utility >= 75.
+    gx = px(75)
+    s.append(
+        f'<rect x="{gx:.0f}" y="{top}" width="{px(100) - gx:.0f}" height="{py(75) - top:.0f}" '
+        f'fill="var(--good)" opacity="0.10"/>'
+    )
+    s.append(
+        f'<text x="{px(100) - 6:.0f}" y="{top + 16}" text-anchor="end" font-size="11" '
+        f'font-weight="600" fill="var(--good)">safe + useful</text>'
+    )
+
+    # gridlines and axis ticks every 20%
+    for t in (0, 20, 40, 60, 80, 100):
+        gxp, gyp = px(t), py(t)
+        s.append(
+            f'<line x1="{gxp:.0f}" y1="{top}" x2="{gxp:.0f}" y2="{top + ph}" '
+            f'stroke="var(--line)" stroke-width="1"/>'
+        )
+        s.append(
+            f'<line x1="{left}" y1="{gyp:.0f}" x2="{left + pw}" y2="{gyp:.0f}" '
+            f'stroke="var(--line)" stroke-width="1"/>'
+        )
+        s.append(
+            f'<text x="{gxp:.0f}" y="{top + ph + 18}" text-anchor="middle" font-size="11" '
+            f'fill="var(--muted)">{t}%</text>'
+        )
+        s.append(
+            f'<text x="{left - 8}" y="{gyp + 4:.0f}" text-anchor="end" font-size="11" '
+            f'fill="var(--muted)">{t}%</text>'
+        )
+
+    # axis titles
+    s.append(
+        f'<text x="{left + pw / 2:.0f}" y="{h - 12}" text-anchor="middle" font-size="12" '
+        f'fill="var(--muted)">Robustness  (1 minus attack success)</text>'
+    )
+    s.append(
+        f'<text transform="translate(16,{top + ph / 2:.0f}) rotate(-90)" text-anchor="middle" '
+        f'font-size="12" fill="var(--muted)">Utility  (benign task completed)</text>'
+    )
+
+    # one point per model, labeled with its two values
+    for r in rows:
+        cx, cy = px(r["robustness"] * 100), py(r["utility"] * 100)
+        name = str(r["label"]).replace(" (local)", "")
+        s.append(
+            f'<circle cx="{cx:.0f}" cy="{cy:.0f}" r="6" fill="var(--ink)" '
+            f'stroke="var(--panel)" stroke-width="2"/>'
+        )
+        s.append(
+            f'<text x="{cx + 12:.0f}" y="{cy - 2:.0f}" font-size="12.5" font-weight="600" '
+            f'fill="var(--ink)">{name}</text>'
+        )
+        s.append(
+            f'<text x="{cx + 12:.0f}" y="{cy + 12:.0f}" font-size="10.5" fill="var(--muted)">'
+            f'R {r["robustness"] * 100:.0f}% · U {r["utility"] * 100:.0f}%</text>'
+        )
+
+    s.append("</svg>")
+    return "".join(s)
+
+
 def main() -> int:
     summaries = sorted(RESULTS_DIR.glob("*/summary.json"))
     if not summaries:
@@ -125,6 +224,7 @@ def main() -> int:
             scenario_count=summary["scenario_count"],
             repeats=summary["repeats"],
             date=summary["date"],
+            chart=build_chart_svg(summary["rows"]),
             rows="\n".join(rows),
         )
     )
