@@ -105,6 +105,18 @@ def load_config(path: str | Path | None) -> RunConfig:
 
 
 def default_scenarios_dir() -> Path:
-    """Scenarios bundled beside the repository checkout, if present."""
-    candidate = Path(__file__).resolve().parents[2] / "scenarios"
-    return candidate if candidate.is_dir() else Path("scenarios")
+    """Locate the scenario suite, preferring a local checkout over the installed copy.
+
+    Order matters: someone working in the repository (or iterating on a scenario in
+    their own project) should get their files, while a plain ``pip install`` user
+    still gets the bundled suite rather than an empty-directory error.
+    """
+    candidates = (
+        Path("scenarios"),
+        Path(__file__).resolve().parent / "scenarios",
+        Path(__file__).resolve().parents[2] / "scenarios",
+    )
+    for candidate in candidates:
+        if candidate.is_dir() and any(candidate.rglob("*.yaml")):
+            return candidate
+    return Path("scenarios")

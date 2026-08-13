@@ -4,7 +4,13 @@ from pathlib import Path
 
 import pytest
 
-from agentgauntlet.loader import ScenarioLoadError, discover, load_config, load_scenario
+from agentgauntlet.loader import (
+    ScenarioLoadError,
+    default_scenarios_dir,
+    discover,
+    load_config,
+    load_scenario,
+)
 from agentgauntlet.models import Category
 
 
@@ -94,3 +100,13 @@ def test_load_config_defaults() -> None:
     cfg = load_config(None)
     assert cfg.suite.repeats == 3
     assert cfg.gate.fail_over_asr == 0.10
+    assert cfg.suite.scenarios is None  # resolved at run time to the bundled suite
+
+
+def test_default_scenarios_dir_resolves_outside_a_checkout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A pip-installed user runs from their own project, not from this repo."""
+    monkeypatch.chdir(tmp_path)
+    found = discover(default_scenarios_dir())
+    assert len(found) >= 16

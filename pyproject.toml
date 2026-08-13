@@ -59,6 +59,14 @@ agentgauntlet = "agentgauntlet.pytest_plugin"
 [tool.hatch.build.targets.wheel]
 packages = ["src/agentgauntlet"]
 
+# Scenarios are authored at the repo root (easy to browse and contribute to) but
+# must ship inside the package, or a pip-installed user has nothing to run.
+[tool.hatch.build.targets.wheel.force-include]
+"scenarios" = "agentgauntlet/scenarios"
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "scenarios", "tests", "README.md", "LICENSE"]
+
 [tool.ruff]
 line-length = 100
 target-version = "py311"

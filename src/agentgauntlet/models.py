@@ -204,7 +204,7 @@ class AdapterConfig(BaseModel):
 class SuiteConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    scenarios: str = "./scenarios"
+    scenarios: str | None = None  # None resolves to the bundled suite
     categories: list[Category] = Field(default_factory=list)
     repeats: int = 3
     max_turns: int | None = None

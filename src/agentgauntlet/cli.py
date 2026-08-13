@@ -13,7 +13,7 @@ from .adapters import build_adapter, describe_adapter
 from .adapters.base import AgentAdapter
 from .detectors import Judge
 from .engine import run_suite
-from .loader import ScenarioLoadError, discover, load_config
+from .loader import ScenarioLoadError, default_scenarios_dir, discover, load_config
 from .models import AdapterConfig, Category, RunConfig, ScenarioRun, Verdict
 from .report import load_json, write_html, write_json, write_junit
 from .scoring import gate_failures, summarize
@@ -115,14 +115,15 @@ def run(
             _fail(f"{exc}. Valid categories: {', '.join(c.value for c in Category)}")
             return
 
+    scenario_root = cfg.suite.scenarios or str(default_scenarios_dir())
     try:
-        found = discover(cfg.suite.scenarios, cfg.suite.categories or None)
+        found = discover(scenario_root, cfg.suite.categories or None)
     except ScenarioLoadError as exc:
         _fail(str(exc))
         return
 
     if not found:
-        _fail(f"no scenarios found under {cfg.suite.scenarios}")
+        _fail(f"no scenarios found under {scenario_root}")
         return
 
     label = describe_adapter(cfg.adapter)
@@ -207,11 +208,12 @@ def run(
 @app.command("list")
 def list_scenarios(
     scenarios: Annotated[
-        Path, typer.Option("--scenarios", "-s", help="Scenario file or directory.")
-    ] = Path("scenarios"),
+        Path | None, typer.Option("--scenarios", "-s", help="Scenario file or directory.")
+    ] = None,
     category: Annotated[list[str] | None, typer.Option("--category")] = None,
 ) -> None:
     """List discovered scenarios."""
+    scenarios = scenarios or default_scenarios_dir()
     categories = None
     if category:
         try:

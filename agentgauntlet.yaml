@@ -11,7 +11,8 @@ adapter:
   model: vulnerable
 
 suite:
-  scenarios: ./scenarios
+  # Omit to use the bundled suite; set a path to run your own scenarios.
+  scenarios: null
   # categories: [data_exfiltration, tool_misuse]   # omit to run all eight
   repeats: 3
   temperature: 0.0
