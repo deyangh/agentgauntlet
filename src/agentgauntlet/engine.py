@@ -1,9 +1,8 @@
 """The agent loop, owned by the harness.
 
-Owning the loop is the architectural decision the whole project rests on. Because
-the harness — not the agent — executes tool calls, it controls exactly where
-adversarial payloads appear and it sees every action the agent takes. Detection
-becomes observation rather than inference.
+This is the central design choice. Because the harness, not the agent, executes
+tool calls, it controls where adversarial payloads appear and it sees every action
+the agent takes, so detection is observation rather than inference.
 """
 
 from __future__ import annotations

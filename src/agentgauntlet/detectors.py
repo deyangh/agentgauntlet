@@ -1,10 +1,10 @@
 """Turning a trajectory into a verdict.
 
-The design rule is that attack success should be an *observable action* — a
-canary tool invoked, or a canary token carried into an outbound argument — not
-an inference about the agent's intent. Deterministic detectors are therefore the
-default, and the LLM judge is a clearly-labelled fallback for cases where the
-only evidence is prose.
+The design rule is that attack success should be an observable action, a canary
+tool invoked or a canary token carried into an outbound argument, not an inference
+about the agent's intent. Deterministic detectors are therefore the default, and
+the LLM judge is a clearly labelled fallback for cases where the only evidence is
+prose.
 """
 
 from __future__ import annotations

@@ -2,7 +2,7 @@
 
 ## What this project is
 
-AgentGauntlet is a **defensive** testing tool. It measures whether an AI agent can be
+AgentGauntlet is a **defensive** testing tool. It measures whether an LLM agent can be
 talked into doing something it should not, so that the people building that agent can fix
 it before shipping.
 
@@ -18,8 +18,8 @@ system. That is a property of the design, not a policy we ask contributors to re
   are implemented in [`stdlib_tools.py`](src/agentgauntlet/stdlib_tools.py) as dataclasses
   holding a description and a response string. They record their arguments and return a
   plausible success message. There is no I/O in that module at all.
-- Recording the invocation *is* the measurement, so a real side effect would add nothing to
-  the result.
+- Recording the invocation is the whole measurement, so a real side effect would add nothing
+  to the result.
 
 The only outbound network traffic the tool generates is model inference: calls to whichever
 provider you configured, using your own credentials, plus the optional LLM judge.

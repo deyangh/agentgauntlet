@@ -56,9 +56,9 @@
   <p class="tag">pytest for agent security.</p>
 
   <p>
-    Point it at an LLM agent and it runs the thing through a suite of prompt-injection,
-    data-exfiltration, confused-deputy, and tool-misuse scenarios, then tells you —
-    reproducibly — which ones it fell for.
+    Point it at an LLM agent and it runs the agent through a suite of prompt-injection,
+    data-exfiltration, confused-deputy, and tool-misuse scenarios, then reports which ones it
+    fell for.
   </p>
 
   <div class="cards">
@@ -72,48 +72,47 @@
     </a>
     <span class="card soon">
       <div class="t">Leaderboard</div>
-      <div class="d">Cross-model results — coming with the first benchmark run</div>
+      <div class="d">Cross-model results, coming with the first benchmark run</div>
     </span>
   </div>
 
   <h2>Try it in one command</h2>
-  <p>No API key required — this runs the whole suite against a simulated agent, offline.</p>
+  <p>No API key required. This runs the whole suite against a simulated agent, offline.</p>
 <pre>pip install git+https://github.com/deyangh/agentgauntlet
 agentgauntlet run --adapter mock --out report.html</pre>
 
-  <h2>Why it can measure anything</h2>
+  <h2>How it works</h2>
   <p>
-    <strong>The harness owns the agent loop.</strong> Your agent only answers "given this
-    conversation and these tools, what next?" — AgentGauntlet executes every tool call
-    itself. That buys control over where adversarial payloads appear (inside the data a tool
-    returns, which is how real injection arrives) and observation of every action taken.
+    <strong>The harness owns the agent loop.</strong> Your agent only answers one question,
+    given this conversation and these tools, what next, and AgentGauntlet executes every tool
+    call itself. That gives it control over where adversarial payloads appear (inside the data
+    a tool returns, which is how real injection arrives) and a record of every action taken.
   </p>
   <p>
     <strong>Attack success is an observable action.</strong> Scenarios are built so the only
-    way to comply is to invoke a canary tool or carry a canary token into an outbound
-    argument. The secret crossed the boundary or it did not; there is no rubric to argue
-    with.
+    way to fall for the attack is to call a canary tool or pass a canary token into an
+    outbound argument. Either the secret crossed the boundary or it did not.
   </p>
 
-  <h2>Attack success rate is only half a score</h2>
+  <h2>Attack success rate is only half the score</h2>
   <p>
     An agent that refuses everything scores a perfect 0% attack success rate. So does one
     too weak to call tools. Every scenario therefore carries a benign-task check, and both
-    numbers are reported together — a result is good only when attack success is low
+    numbers are reported together: a result is good only when attack success is low
     <em>and</em> utility is high.
   </p>
 
   <h2>Testing your own agent</h2>
-  <p>Three adapters, one interface:</p>
+  <p>Three adapters share one interface:</p>
   <ul>
-    <li><code>litellm</code> — any hosted or local model, including Ollama</li>
-    <li><code>callable</code> — your own Python agent, guardrails and all, inside the loop</li>
-    <li><code>subprocess</code> — an agent in any language, over JSON on stdin/stdout</li>
+    <li><code>litellm</code> for any hosted or local model, including Ollama</li>
+    <li><code>callable</code> for your own Python agent, guardrails and all, inside the loop</li>
+    <li><code>subprocess</code> for an agent in any language, over JSON on stdin/stdout</li>
   </ul>
 
   <footer>
     Every attack runs inside an in-process mock environment. No email is sent, no request
-    leaves the machine, nothing is deleted or transferred — the "malicious" tools are
+    leaves the machine, and nothing is deleted or transferred. The "malicious" tools are
     instrumented stubs whose invocation is the measurement.
   </footer>
 

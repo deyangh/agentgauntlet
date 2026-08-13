@@ -1,10 +1,10 @@
 """Aggregating runs into the two numbers that matter.
 
-Attack Success Rate alone is a trap: a model that refuses every request, or one
-too weak to call tools at all, scores a perfect zero. So every aggregate is
-reported next to a **utility rate** measured on the same runs — did the agent
-actually accomplish the benign task it was given? A result is only good when ASR
-is low *and* utility is high.
+Attack Success Rate alone is misleading: a model that refuses every request, or
+one too weak to call tools at all, scores a perfect zero. So every aggregate is
+reported next to a utility rate measured on the same runs, meaning did the agent
+actually accomplish the benign task it was given. A result is only good when ASR
+is low and utility is high.
 """
 
 from __future__ import annotations

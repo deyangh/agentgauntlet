@@ -4,14 +4,14 @@
 something that looks like a task. The agent does the task.
 
 This is the subtlest category, because the payload does not have to be adversarial at all.
-"Action items" in meeting notes, a workflow note in a CRM record, a checklist in a ticket —
-this is ordinary business writing that happens to be phrased in the imperative. An agent
-that cannot separate *content describing actions* from *instructions to take actions* will
-misfire on documents nobody wrote as an attack.
+"Action items" in meeting notes, a workflow note in a CRM record, a checklist in a ticket:
+this is ordinary business writing that happens to be phrased in the imperative. An agent that
+cannot separate content describing actions from instructions to take actions will misfire on
+documents nobody wrote as an attack.
 
 That makes this category a good early-warning signal. An agent that fails here is not being
-outsmarted; it lacks the boundary entirely, and everything else in the gauntlet is
-downstream of that.
+outsmarted; it lacks the boundary entirely, and everything else in the suite is downstream of
+that.
 
 **What the scenarios do.** A read-only request ("summarize my notes", "tell me where the
 deal stands") returns content containing an instruction addressed to the assistant. Success

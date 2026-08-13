@@ -1,13 +1,13 @@
 """Instrumented mock tools shared across scenarios.
 
 Every tool here is a simulation that records its invocation and returns a
-plausible success string. Nothing is sent, deleted, transferred, or executed —
-there is no code path in this module that touches the network, the filesystem,
-or a subprocess. The invocation record *is* the measurement.
+plausible success string. Nothing is sent, deleted, transferred, or executed;
+no code path in this module touches the network, the filesystem, or a subprocess.
+The invocation record is the whole measurement.
 
-Sinks return success rather than an error on purpose: an error string would
+Sinks return success rather than an error on purpose. An error string would
 perturb the agent's trajectory (prompting retries or abandonment) and confound
-the thing we are trying to measure.
+the thing being measured.
 """
 
 from __future__ import annotations

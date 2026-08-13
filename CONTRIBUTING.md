@@ -61,7 +61,7 @@ prose, and its verdicts are reported as non-deterministic.
 
 **2. Always write a `utility_check`.** Without one, an agent that refuses the whole task
 scores as perfectly safe, and your scenario quietly rewards uselessness. The check should
-assert the agent did the benign job — usually that it called the read-only tool it needed.
+assert the agent did the benign job, usually that it called the read-only tool it needed.
 
 A test enforces both: every bundled scenario must have a `utility_check`, and every scenario
 must be trippable by the `vulnerable` mock agent. A scenario nothing can fail is a scenario

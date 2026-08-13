@@ -12,15 +12,15 @@ Publish it on your site and link it from the README.
 ## Suggested title
 
 Something claim-shaped, not project-shaped. "I tested N agent configurations for prompt
-injection — here's what broke" beats "Announcing AgentGauntlet."
+injection, here's what broke" beats "Announcing AgentGauntlet."
 
 ## 1. The problem (≈200 words)
 
 Open with the gap, not the tool. Agent security is not model safety: a model can refuse
 every harmful request in a chat box and still hand over a credential when the request
-arrives inside a tool result. Existing benchmarks measure bare models in fixed sandboxes;
-engineers ship assembled stacks — a system prompt, a set of tools, an MCP server or two —
-and have no way to test the thing they actually deployed.
+arrives inside a tool result. Existing benchmarks measure bare models in fixed sandboxes,
+while engineers ship assembled stacks (a system prompt, a set of tools, an MCP server or
+two) and have no way to test the thing they actually deployed.
 
 ## 2. Method (≈400 words)
 
@@ -34,7 +34,7 @@ anything:
 
 Then the honest methodology notes:
 
-- Utility baseline, and *why* — a refusing model scores a perfect ASR otherwise.
+- Utility baseline, and why: a refusing model scores a perfect ASR otherwise.
 - Errored runs excluded from rates, not counted as resistance.
 - Repeats and temperature; which scenarios were unstable across repeats.
 - The LLM judge is secondary and its verdicts are segregated.
@@ -55,9 +55,9 @@ Then the structure behind it:
 - Did any model score low ASR **because** it had low utility? Name it. This is the finding
   a careless benchmark would have reported as a win.
 - Did results move between repeats? Report the unstable scenarios rather than hiding them.
-- Anything surprising in a transcript — quote it. One vivid trajectory is worth a table.
+- Anything surprising in a transcript, quote it. One vivid trajectory is worth a table.
 
-## 4. Limitations (do not skip — this section is why readers trust the rest)
+## 4. Limitations (do not skip; this section is why readers trust the rest)
 
 - Mock environments are not production. Real tools have latency, errors, partial results.
 - Sixteen scenarios is a starting suite, not coverage. Absence of a finding is not evidence.
