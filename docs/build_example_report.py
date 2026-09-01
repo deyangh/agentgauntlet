@@ -2,9 +2,8 @@
 """Regenerate the published example report at docs/example-report.html.
 
 This is the sample report linked from the site, so it is built with the site
-navigation bar (`site_nav=True`) — unlike a user's own `agentgauntlet run`
-report, which has no site chrome. Runs the offline `safe` mock, so it needs no
-API key.
+navigation bar (`site_nav=True`). A user's own `agentgauntlet run` report has
+no site chrome. Runs the offline `safe` mock, so it needs no API key.
 
     python docs/build_example_report.py
 """

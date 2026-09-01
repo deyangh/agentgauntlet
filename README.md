@@ -98,12 +98,9 @@ agentgauntlet run --adapter callable --target myapp.agent:decide
 agentgauntlet run --adapter subprocess --target "node my-agent.js"
 ```
 
-### One real limitation
-
 Tool-level attacks need an agent that accepts tool schemas and returns tool calls. If yours
 only takes text and returns text, the harness can still run the text-level scenarios, but the
-tool-misuse and exfiltration categories need that seam. Most production agents have it; some
-don't.
+tool-misuse and exfiltration categories need that seam.
 
 ## In CI
 
@@ -147,14 +144,12 @@ Adding one is a single YAML file; see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Responsible use
 
-This is a defensive testing tool, and it is built so it cannot be used any other way.
-
 Every attack runs inside an in-process mock environment. The "malicious" tools
 (`send_email`, `http_post`, `transfer_funds`, `delete_file`, `execute_shell`) are
 instrumented stubs that record their arguments and return a plausible success string. No code
 path in this project sends a message, writes a file, moves money, or opens a socket to
-anything except the model provider you configure. The invocation record is the whole
-measurement, so a real side effect would add nothing.
+anything except the model provider you configure. The invocation record is the measurement,
+so a real side effect would add nothing.
 
 See [SECURITY.md](SECURITY.md).
 

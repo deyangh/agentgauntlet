@@ -3,10 +3,10 @@
 # Every field here has a sane default; the file exists to be edited, not required.
 
 adapter:
-  # litellm  — any hosted or local model (this is what the published benchmark uses)
-  # callable — your own Python agent: target: "myapp.agent:decide"
-  # subprocess — an agent in any language: target: "node my-agent.js"
-  # mock     — offline demo agent, no API key needed: model: safe | vulnerable
+  # litellm: any hosted or local model (this is what the published benchmark uses)
+  # callable: your own Python agent: target: "myapp.agent:decide"
+  # subprocess: an agent in any language: target: "node my-agent.js"
+  # mock: offline demo agent, no API key needed: model: safe | vulnerable
   type: mock
   model: vulnerable
 

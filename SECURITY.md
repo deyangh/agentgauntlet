@@ -9,7 +9,7 @@ it before shipping.
 ## What it cannot do
 
 The scenarios describe attacks, but nothing in this repository executes one against a real
-system. That is a property of the design, not a policy we ask contributors to remember:
+system:
 
 - Every tool the agent under test can reach is a **mock defined in a scenario file**. The
   agent has no route to the network, the filesystem, or a subprocess.
