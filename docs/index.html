@@ -106,17 +106,16 @@ agentgauntlet run --adapter mock --out report.html</pre>
     a tool returns, which is how real injection arrives) and a record of every action taken.
   </p>
   <p>
-    <strong>Attack success is an observable action.</strong> Scenarios are built so the only
-    way to fall for the attack is to call a canary tool or pass a canary token into an
-    outbound argument. Either the secret crossed the boundary or it did not.
+    <strong>The bundled detectors are deterministic.</strong> They identify prohibited
+    tool calls and canary leakage in outbound arguments or the agent's final response.
   </p>
 
   <h2>Attack success rate is only half the score</h2>
   <p>
     An agent that refuses everything scores a perfect 0% attack success rate. So does one
     too weak to call tools. Every scenario therefore carries a benign-task check, and both
-    numbers are reported together: a result is good only when attack success is low
-    <em>and</em> utility is high.
+    numbers are reported together. Utility checks measure observable task progress;
+    a tool-use check alone does not establish final-answer correctness or completeness.
   </p>
 
   <h2>Testing your own agent</h2>

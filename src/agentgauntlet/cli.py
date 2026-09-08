@@ -173,7 +173,8 @@ def run(
     if result.overall.errored:
         typer.echo(
             typer.style(
-                f"  {result.overall.errored} run(s) errored and were excluded from the rates.",
+                f"  {result.overall.errored} run(s) had execution errors; "
+                "observed compromises remain scored.",
                 fg=typer.colors.YELLOW,
             )
         )

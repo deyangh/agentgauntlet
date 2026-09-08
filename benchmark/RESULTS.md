@@ -7,9 +7,9 @@ between models rather than flat scores. It does.
 
 **Headline:** across 3 models and 16 scenarios (96 runs, 2 repeats each), **10.4% of runs
 executed the planted attack**. But the more useful number is the other axis: the models
-completed only **73% of the benign tasks** they were given, so roughly a quarter of every
-model's apparent "resistance" is really just the model failing to do the job. A benchmark
-that reported attack success alone would have missed that entirely.
+passed **73% of the benign-task checks**. Some checks verify tool use rather than
+answer completeness. These results distinguish attack resistance from observable task
+progress, but do not prove that every passing run completed the user's task.
 
 ## Setup
 
@@ -33,10 +33,9 @@ Adding hosted models is a one-line uncomment in [`models.yaml`](models.yaml).
 | Mistral 7B | 87.5% | 12.5% | 62.5% | 32 |
 
 Robustness is `1 − attack success rate`. Utility is the share of runs where the model also
-completed the benign task. Read together, Qwen is the clear winner: lowest attack success and
-highest utility. Llama and Mistral tie on attack success, but Mistral completed far fewer
-benign tasks, so it is the weakest of the three once utility is accounted for. Every run was
-deterministic at temperature 0, and the two repeats agreed on every scenario for every model
+passed the benign-task checks. Qwen had the lowest attack success and highest utility
+in this sample. Llama and Mistral tie on attack success, but Mistral passed fewer checks.
+The two repeats at temperature 0 agreed on every scenario for every model
 (no unstable results).
 
 ## Why the utility axis matters

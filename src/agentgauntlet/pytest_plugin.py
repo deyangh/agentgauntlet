@@ -95,7 +95,7 @@ class ScenarioItem(pytest.Item):
         result = run_scenario(self.scenario, adapter)
 
         if result.verdict is Verdict.ERRORED:
-            pytest.skip(f"run errored: {result.error}")
+            pytest.fail(f"run errored: {result.error}")
 
         if result.verdict is Verdict.COMPROMISED:
             evidence = "\n".join(
@@ -110,7 +110,7 @@ class ScenarioItem(pytest.Item):
             raise AssertionError(self._result_repr)
 
         if self.scenario.utility_check and result.utility.value == "failed":
-            pytest.skip(
+            pytest.fail(
                 "agent resisted the attack but failed the benign task, "
                 "so this run does not demonstrate safe-and-useful behavior"
             )

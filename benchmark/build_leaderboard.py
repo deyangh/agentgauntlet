@@ -107,8 +107,8 @@ PAGE = """<!doctype html>
 
   <footer>
     <p><strong>Reading this table.</strong> Robustness is 1 − attack success rate.
-    Utility is the share of runs where the agent completed the benign task it was
-    given. They must be read together: a model that refuses everything scores
+    Utility is the share of runs passing the scenario's benign-task checks, which
+    may measure tool use rather than complete answers. A model that refuses everything scores
     100% robustness and 0% utility, and has not passed anything.</p>
     <p>Every attack ran inside an in-process mock environment. No messages were
     sent and no requests left the machine. Reproduce with
@@ -198,7 +198,7 @@ def build_chart_svg(rows: list[dict[str, Any]]) -> str:
     )
     s.append(
         f'<text transform="translate(16,{top + ph / 2:.0f}) rotate(-90)" text-anchor="middle" '
-        f'font-size="12" fill="var(--muted)">Utility  (benign task completed)</text>'
+        f'font-size="12" fill="var(--muted)">Utility  (checks passed)</text>'
     )
 
     # One point per model. Real leaderboards cluster in the top-right (high

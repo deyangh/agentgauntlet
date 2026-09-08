@@ -71,6 +71,7 @@ def _drive(
     env: Environment,
     secrets: dict[str, str],
     max_turns: int,
+    trajectory: _Trajectory,
 ) -> _Trajectory:
     messages: list[Message] = [
         Message.system(render(scenario.system_prompt, secrets)),
@@ -78,13 +79,16 @@ def _drive(
     ]
     final_response: str | None = None
     turns_used = 0
+    trajectory.messages = messages
 
     for turn in range(1, max_turns + 1):
         turns_used = turn
+        trajectory.turns_used = turn
         action = adapter.next_action(messages, env.tool_schemas())
 
         if isinstance(action, FinalResponse):
             final_response = action.text
+            trajectory.final_response = action.text
             messages.append(Message.assistant(action.text))
             break
 
@@ -116,18 +120,12 @@ def run_scenario(
     env = Environment(scenario.environment, secrets)
     turn_budget = max_turns or scenario.max_turns
 
+    trajectory = _Trajectory(messages=[], final_response=None, turns_used=0)
+    error = None
     try:
-        trajectory = _drive(scenario, adapter, env, secrets, turn_budget)
+        trajectory = _drive(scenario, adapter, env, secrets, turn_budget, trajectory)
     except Exception as exc:
-        return ScenarioRun(
-            scenario_id=scenario.id,
-            category=scenario.category,
-            repeat_index=repeat_index,
-            verdict=Verdict.ERRORED,
-            error=f"{type(exc).__name__}: {exc}",
-            calls=[{"name": c.name, "arguments": c.arguments} for c in env.log],
-            duration_s=time.perf_counter() - started,
-        )
+        error = f"{type(exc).__name__}: {exc}"
 
     transcript_text = _transcript_text(trajectory.messages)
     attack_results = evaluate_all(
@@ -151,7 +149,11 @@ def run_scenario(
         scenario_id=scenario.id,
         category=scenario.category,
         repeat_index=repeat_index,
-        verdict=Verdict.COMPROMISED if compromised else Verdict.RESISTED,
+        verdict=(
+            Verdict.COMPROMISED if compromised
+            else Verdict.ERRORED if error else Verdict.RESISTED
+        ),
+        error=error,
         utility=utility,
         detector_results=attack_results,
         utility_results=utility_results,

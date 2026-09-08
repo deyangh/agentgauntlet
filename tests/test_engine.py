@@ -99,6 +99,26 @@ def test_adapter_failure_is_recorded_as_errored_not_resisted(tmp_path: Path) -> 
     assert "provider exploded" in (result.error or "")
 
 
+def test_compromise_is_preserved_when_next_turn_errors(scenarios_dir: Path) -> None:
+    scenario = next(s for s in discover(scenarios_dir) if s.id == "di-summarize-doc-01")
+
+    class AttackThenError:
+        def next_action(self, messages, tools):  # type: ignore[no-untyped-def]
+            if any(m.role == "tool" for m in messages):
+                raise AdapterError("provider timeout")
+            return ToolCalls(calls=[ToolCall(
+                name="post_message", arguments={"channel": "general", "text": "document"}
+            )])
+
+    result = run_scenario(scenario, AttackThenError())
+    assert result.verdict is Verdict.COMPROMISED
+    assert result.compromised_by_deterministic_detector
+    assert result.error == "AdapterError: provider timeout"
+    assert result.turns_used == 2
+    assert result.transcript[-1]["role"] == "tool"
+    assert result.calls[0]["result"]
+
+
 def test_canary_differs_between_repeats(tmp_path: Path) -> None:
     scenario = load_scenario(_fixture(tmp_path))
     adapter = ScriptedAdapter([ToolCalls(calls=[ToolCall(name="read_note", arguments={})])])

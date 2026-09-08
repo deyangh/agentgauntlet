@@ -118,7 +118,7 @@
       <div class="value {{ 'bad' if result.overall.utility_rate < 0.8 else 'good' }}">
         {% if result.overall.utility_evaluated %}{{ '%.1f' % (result.overall.utility_rate * 100) }}%{% else %}n/a{% endif %}
       </div>
-      <div class="note">benign task completed{% if result.overall.utility_rate < 0.8 and result.overall.utility_evaluated %}; low utility invalidates a low ASR{% endif %}</div>
+      <div class="note">benign-task checks passed{% if result.overall.utility_rate < 0.8 and result.overall.utility_evaluated %}; low utility limits interpretation of a low ASR{% endif %}</div>
     </div>
     <div class="tile">
       <div class="label">Errored</div>

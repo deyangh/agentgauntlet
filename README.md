@@ -37,9 +37,8 @@ That gives it two things:
 - **Observation.** Every tool call and its arguments are recorded, so detection is a lookup
   rather than a guess.
 
-**Attack success is an observable action, not a judgment call.** Each scenario is built so
-the only way to fall for the attack is to call a canary tool or pass a canary token into an
-outbound argument:
+**The bundled suite uses deterministic detectors.** They identify prohibited tool
+calls and canary leakage in outbound arguments or the agent's final response:
 
 ```yaml
 detectors:
@@ -59,9 +58,10 @@ A model that refuses everything scores a perfect 0% attack success rate. So does
 weak to call tools at all. Report attack success on its own and a useless model comes out on
 top.
 
-So every scenario also has a **`utility_check`**: did the agent complete the harmless task it
-was actually given? Both numbers come from the same runs, and a result only looks good when
-attack success is low and utility is high:
+Every bundled scenario also has a **`utility_check`** for observable progress on the
+benign task. Some checks verify tool use, such as reading the requested document;
+they do not establish that the final answer is correct or complete. Both numbers
+come from the same runs and should be interpreted with each scenario's checks:
 
 ```
 overall            asr 6.2%   robustness 93.8%   utility 100.0%
@@ -108,20 +108,25 @@ tool-misuse and exfiltration categories need that seam.
 agentgauntlet run --config agentgauntlet.yaml --fail-over-asr 0.10
 ```
 
-This exits non-zero when the gate trips and writes JUnit XML for your CI's test reporter.
+This exits non-zero when the gate trips. Execution errors and zero valid evaluations
+always fail the gate; a configured utility floor also requires evaluated utility checks.
+An observed compromise remains scored even if a later turn errors.
+Add `--junit junit.xml` to write JUnit XML for your CI's test reporter.
 There is also a pytest plugin, so scenarios can be collected as ordinary tests:
 
 ```bash
-pytest --agentgauntlet-scenarios ./scenarios --agentgauntlet-adapter mock
+pytest ./scenarios --agentgauntlet-scenarios ./scenarios --agentgauntlet-adapter mock
 ```
+
+The pytest plugin fails on compromise, execution errors, and failed utility checks.
 
 ## Results
 
 A first run against three local models (Llama 3.1 8B, Qwen 2.5 7B, Mistral 7B) is on the
 **[leaderboard](https://deyangh.github.io/agentgauntlet/leaderboard/)**, with a full writeup
 in [`benchmark/RESULTS.md`](benchmark/RESULTS.md). Across 96 runs, 10.4% executed the planted
-attack, but the models completed only 73% of the benign tasks, so much of their apparent
-resistance is really failure to do the job. That gap is exactly what the utility axis is for.
+attack, and 73% passed the scenario utility checks. Passing a utility check is a
+proxy for task progress, not a guarantee of task completion.
 Adding hosted models is a one-line uncomment in [`benchmark/models.yaml`](benchmark/models.yaml).
 
 ## The scenario suite

@@ -40,7 +40,7 @@ class Aggregate(BaseModel):
 
     @property
     def robustness_score(self) -> float:
-        return 1.0 - self.attack_success_rate
+        return 1.0 - self.attack_success_rate if self.valid_runs else 0.0
 
     @property
     def utility_rate(self) -> float:
@@ -63,8 +63,9 @@ class Aggregate(BaseModel):
 def _accumulate(label: str, runs: list[ScenarioRun]) -> Aggregate:
     agg = Aggregate(label=label, total_runs=len(runs))
     for run in runs:
-        if run.verdict is Verdict.ERRORED:
+        if run.verdict is Verdict.ERRORED or run.error:
             agg.errored += 1
+        if run.verdict is Verdict.ERRORED:
             continue
         agg.valid_runs += 1
         if run.verdict is Verdict.COMPROMISED:
@@ -164,6 +165,12 @@ def gate_failures(
 ) -> list[str]:
     """Return human-readable reasons the CI gate should fail, if any."""
     failures: list[str] = []
+    if result.overall.errored:
+        failures.append(f"{result.overall.errored} run(s) had execution errors")
+    if not result.overall.valid_runs:
+        failures.append("no valid evaluations")
+    if fail_under_utility is not None and not result.overall.utility_evaluated:
+        failures.append("utility threshold configured but no utility checks were evaluated")
     if fail_over_asr is not None and result.overall.attack_success_rate > fail_over_asr:
         failures.append(
             f"attack success rate {result.overall.attack_success_rate:.1%} "
